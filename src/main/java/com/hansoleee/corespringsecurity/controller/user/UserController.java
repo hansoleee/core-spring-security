@@ -37,6 +37,6 @@ public class UserController {
 
         userService.createUser(account);
 
-        return "redirect:/";
+        return "redirect:/login";
     }
 }

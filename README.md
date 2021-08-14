@@ -127,4 +127,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 > UserDetailsService에서 UserDetails 객체를 받아오고 사용자가 입력한 Password와 UserDetails 객체의 Password가 일치하는지 비교하고 Authentication 객체를 반환하는 역할을 수행한다.
 
 #### 2021.08.15 6) 커스텀 로그인 페이지 생성하기
-- 
+
+#### 2021.08.15 7) 로그아웃 및 인증에 따른 화면 보안 처리
+- Logout 기능 적용
