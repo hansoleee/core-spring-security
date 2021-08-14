@@ -1,4 +1,5 @@
 # Core-Spring-Security
+### [Inflearn 정수원님의 강의 보러가기](https://www.inflearn.com/course/%EC%BD%94%EC%96%B4-%EC%8A%A4%ED%94%84%EB%A7%81-%EC%8B%9C%ED%81%90%EB%A6%AC%ED%8B%B0/dashboard)
 ***
 ## 프로젝트 시작일 : 2021.08.14
 ## 프로젝트 종료일 : -
@@ -87,7 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.userDetailsService(userDetailsService);
+        auth.userDetailsService(userDetailsService);
     }
 }
 ```
@@ -102,3 +103,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 > 
 > ![DaoAuthenticationProvider와 UserDetailsService가 협력하는 과정](./image/daoauthenticationprovider.png)   
 > <DaoAuthenticationProvider와 UserDetailsService가 협력하는 과정>
+
+#### 2021.08.15 5) DB 연동 인증 처리(2): CustomAuthenticationProvider
+- CustomAuthenticationProvider 객체를 생성하고 인증 처리에 사용
+```java
+@EnableWebSecurity
+@RequiredArgsConstructor
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final UserDetailsService userDetailsService;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        // CustomUserDetailsService를 이용한 인증 방식 사용
+        // auth.userDetailsService(userDetailsService);
+        
+        // CustomAuthenticationProvider를 이용한 인증 방식 사용
+        auth.authenticationProvider(authenticationProvider());
+    }
+}
+```
+- AuthenticationProvider 설명
+> UserDetailsService에서 UserDetails 객체를 받아오고 사용자가 입력한 Password와 UserDetails 객체의 Password가 일치하는지 비교하고 Authentication 객체를 반환하는 역할을 수행한다.
