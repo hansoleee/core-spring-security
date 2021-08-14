@@ -130,3 +130,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 #### 2021.08.15 7) 로그아웃 및 인증에 따른 화면 보안 처리
 - Logout 기능 적용
+
+#### 2021.08.15 8) 인증 부가 기능 - WebAuthenticationDetails, AuthenticationDetailsSource
+- WebAuthenticationDetails의 역할
+```text
+WebAuthenticationDetails는 인증 과정 중 전달된 데이터를 저장하는 역할을 한다.
+```
+- AuthenticationDetailsSource의 역할
+```text
+AuthenticationDefailtsSource는 WebAuthenticationDetails를 생성하는 역할을 한다.
+```
+-WebAuthenticationDetails의 활용 방안
+```markdown
+로그인 할 때 보안문자 입력을 하고 보안문자 입력이 맞다면 로그인 성공을 할 때 사용할 수 있을 것 같다. ~~조사는 해보고 말한 거야?~~
+```
