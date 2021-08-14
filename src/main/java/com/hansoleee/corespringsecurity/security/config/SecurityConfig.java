@@ -1,6 +1,6 @@
 package com.hansoleee.corespringsecurity.security.config;
 
-import com.hansoleee.corespringsecurity.security.common.FormAuthenticationDetailsSource;
+import com.hansoleee.corespringsecurity.security.handler.CustomAuthenticationSuccessHandler;
 import com.hansoleee.corespringsecurity.security.provider.CustomAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final AuthenticationDetailsSource authenticationDetailsSource;
+    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -76,6 +77,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/login_proc")
                 .authenticationDetailsSource(authenticationDetailsSource)
                 .defaultSuccessUrl("/home")
+                .successHandler(customAuthenticationSuccessHandler)
                 .permitAll()
         ;
     }

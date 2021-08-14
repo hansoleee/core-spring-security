@@ -144,3 +144,13 @@ AuthenticationDefailtsSource는 WebAuthenticationDetails를 생성하는 역할�
 ```markdown
 로그인 할 때 보안문자 입력을 하고 보안문자 입력이 맞다면 로그인 성공을 할 때 사용할 수 있을 것 같다. ~~조사는 해보고 말한 거야?~~
 ```
+
+#### 2021.08.15 9) 인증 성공 핸들러: CustomAuthenticationSuccessHandler
+- AuthenticationSuccessHandler의 역할
+```text
+FormLogin 인증 필터가 로그인에 성공한 후에 필요한 로직을 수행해주는 역할을 한다.
+```
+- AuthenticationSuccessHandler의 활용 방안
+```text
+로그인 하지 않은 사용자가 특정 url 바로 접근하려 했을 때 먼저 로그인 페이지로 이동하고 로그인 정보를 입력한 뒤에 요청했던 url로 이동시켜 줄 수 있다. 
+```
