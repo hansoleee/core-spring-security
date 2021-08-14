@@ -53,9 +53,21 @@ PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPassw
 2. matches(rawPassword, encodedPassword) // 패스워드 비교
 ```
 - ModelMapper 사용
-> ModelMapper를 사용할 때 기본 설정을 사용하면 Domain 객체에 Setter가 필요하다.
+```text
+ModelMapper를 사용할 때 기본 설정을 사용하면 Domain 객체에 Setter가 필요하다.
+Setter가 없다면 .map()을 사용했을 때 field 이름이 같아도 domain 객체의 field에는 null 값이 들어간다.
+```
 ##### 추가 학습 필요
-- PasswordEncoder를 사용해야되는 이유
-- ModelMapper를 사용하면서 Domain 객체에 Setter 코드를 작성하지 않는 방법
-- 암호화 된 문자열이 {id}encodedPassword 형식이 아닌 encodedPassword 문자열인 이유
- 
+- PasswordEncoder를 사용해야되는 이유 => 보안을 위해서 사용
+- ModelMapper를 사용하면서 Domain 객체에 Setter 코드를 작성하지 않는 방법 => [lokie님의 tistory 보러가기](https://lokie.tistory.com/26)
+> DTO 객체와 domain 객체 mapping을 지원해주는 라이브러리는 여러가지가 있다.   
+> [MapStruct](https://mapstruct.org)   
+> [ModelMapper](http://modelmapper.org/)   
+> 두 라이브러리의 가장 큰 차이는 리플렉션 발생의 유무이다.   
+> MapStruct의 경우 컴파일 시점에서 Annotation을 읽고 구현체를 만들어서 리플렉션이 발생하지 않는다.   
+> 반면에 ModelMapper는 modelMapper.map(member, MemberDTO.class) 호출될 때 리플렉션이 발생한다.   
+> [성능 비교글 보러가기(mangchhe님의 글)](https://mangchhe.github.io/spring/2021/01/25/ModelMapperAndMapStruct/)
+
+- 암호화 된 문자열에 {id}가 붙는 이유 => 
+[spring-security 공식 문서 보기](https://docs.spring.io/spring-security/site/docs/current/reference/html5/#authentication-password-storage)
+- 암호화 된 문자열이 {id}encodedPassword 형식이 아닌 {id}가 빠진 문자열인 이유 => ~~아직 찾지 못했다.~~
