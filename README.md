@@ -155,7 +155,7 @@ FormLogin 인증 필터가 로그인에 성공한 후에 필요한 로직을 수
 로그인 하지 않은 사용자가 특정 url 바로 접근하려 했을 때 먼저 로그인 페이지로 이동하고 로그인 정보를 입력한 뒤에 요청했던 url로 이동시켜 줄 수 있다. 
 ```
 
-#### 2021.08.15 10) 인증 실패 핸들러: CustomAuthenticationFailuerHandler
+#### 2021.08.15 10) 인증 실패 핸들러: CustomAuthenticationFailureHandler
 - AuthenticationFailureHandler의 역할
 ```text
 FormLogin 인증 필터가 로그인에 실패한 후에 필요한 로직을 수행해주는 역할을 한다.
