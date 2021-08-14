@@ -164,3 +164,10 @@ FormLogin 인증 필터가 로그인에 실패한 후에 필요한 로직을 수
 ```text
 실패 원인을 Login 화면에 보여줄 수 있다. 
 ```
+
+#### 2021.08.15 11) 인증 거부 처리 - Access Denied
+- AccessDeniedException(인가 예외)을 발생시키는 Filter와 예외 처리 과정
+```text
+FilterSecurityInterceptor가 AccessDeniedException을 발생시키고 던진다.
+그러면 ExceptionTranslationFilter가 AccessDeniedException을 받고 accessDeniedHandler에게 처리를 위임한다.
+```

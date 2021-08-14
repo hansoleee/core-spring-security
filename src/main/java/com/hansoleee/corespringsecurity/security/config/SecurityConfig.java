@@ -1,6 +1,6 @@
 package com.hansoleee.corespringsecurity.security.config;
 
-import com.hansoleee.corespringsecurity.security.handler.CustomAuthenticationSuccessHandler;
+import com.hansoleee.corespringsecurity.security.handler.CustomAccessDeniedHandler;
 import com.hansoleee.corespringsecurity.security.provider.CustomAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -66,6 +67,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .exceptionHandling()
+                .accessDeniedHandler(accessDeniedHandler())
+
+                .and()
                 .authorizeRequests()
                 .antMatchers("/", "/index", "/home").permitAll()
                 .antMatchers("/users/**", "/login*").permitAll()
@@ -84,5 +89,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler(authenticationFailureHandler)
                 .permitAll()
         ;
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        CustomAccessDeniedHandler customAccessDeniedHandler = new CustomAccessDeniedHandler();
+        customAccessDeniedHandler.setErrorPage("/denied");
+        return customAccessDeniedHandler;
     }
 }
