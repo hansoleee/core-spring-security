@@ -71,3 +71,34 @@ Setter가 없다면 .map()을 사용했을 때 field 이름이 같아도 domain 
 - 암호화 된 문자열에 {id}가 붙는 이유 => 
 [spring-security 공식 문서 보기](https://docs.spring.io/spring-security/site/docs/current/reference/html5/#authentication-password-storage)
 - 암호화 된 문자열이 {id}encodedPassword 형식이 아닌 {id}가 빠진 문자열인 이유 => ~~아직 찾지 못했다.~~
+
+#### 2021.08.14 4) DB 연동 인증 처리(1): CustomUserDetailsService
+- 로그인 요청하는 사용자 정보를 DB에서 조회하도록 기능 구현
+```text
+아래의 코드를 WebSecurityConfigurerAdapter를 상속받는 class에 작성한다.
+(필자는 lombok을 사용하기 때문에 @RequiredArgsConstructor Annotation을 통한 의존성 주입이 가능하다.)
+```
+```java
+@EnableWebSecurity
+@RequiredArgsConstructor
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final UserDetailsService userDetailsService;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    auth.userDetailsService(userDetailsService);
+    }
+}
+```
+```text
+매우 간단한 코드이기에 매우 간단하게 코드 설명을 해보겠다.
+내가 정의한 UserDetailsService Bean을 사용하겠다는 설정 코드이다.
+```
+- UserDetailsService 설명
+> UserDetailsService는 저장된 UserDetails 객체를 반환해주는 인터페이스이다.   
+> UserDetails 객체를 반환을 위해 DaoAuthenticationProvider와 협력한다.      
+> DaoAuthenticationProvider는 요청받은 유저의 ID, Password와 저장된 ID, Password의 검증을 담당한다.   
+> 
+> ![DaoAuthenticationProvider와 UserDetailsService가 협력하는 과정](./image/daoauthenticationprovider.png)   
+> <DaoAuthenticationProvider와 UserDetailsService가 협력하는 과정>
