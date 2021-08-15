@@ -297,3 +297,21 @@ AbstractHttpConfigurer 상속을 통해 구현할 수 있다.
 ```text
 시스템의 규모가 크고 복잡한 경우에 구조화된 아키텍처 구성에 도움이 될 수 있을 것이다. 
 ```
+
+#### 2021.08.15 7) Ajax 로그인 구현 & CSRF 설정
+- Ajax 요청&응답을 위한 설정
+```text
+1. 전송 방식이 Ajax 인지의 여부를 위한 헤더 설정
+    xhr.setRequestHeader("X-Request-With", "XMLHttpRequest");
+
+2. HTML에서 CSRF 헤더 설정과 Javascript에서 사용
+<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+let csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+let csrfToken = $('meta[name="_csrf"]').attr('content');
+xhr.setRequestHeader(csrfHeader, csrfToken);
+
+<form></form>을 이용할 때는 Thymeleaf가 csrf 값을 요청에 담아서 전송한다.
+하지만 Ajax 방식을 이용한 요청에는 Header에 값을 넣어주는 코드를 작성하여 보내야한다. 
+```

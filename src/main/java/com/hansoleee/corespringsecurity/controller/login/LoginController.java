@@ -1,5 +1,6 @@
 package com.hansoleee.corespringsecurity.controller.login;
 
+import com.hansoleee.corespringsecurity.domain.Account;
 import com.hansoleee.corespringsecurity.security.service.AccountContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 @RequiredArgsConstructor
 public class LoginController {
 
-    @GetMapping("/login")
+    @GetMapping({"/login", "/api/login"})
     public String login(@RequestParam(value = "error", required = false) String error,
                         @RequestParam(value = "exception", required = false) String exception,
                         Model model) {
@@ -42,11 +43,11 @@ public class LoginController {
         return "redirect:/login";
     }
 
-    @GetMapping("/denied")
+    @GetMapping({"/denied", "/api/denied"})
     public String accessDenied(@RequestParam(value = "exception", required = false) String exception,
                                Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        AccountContext account = (AccountContext) authentication.getPrincipal();
+        Account account = (Account) authentication.getPrincipal();
 
         model.addAttribute("username", account.getUsername());
         model.addAttribute("exception", exception);
