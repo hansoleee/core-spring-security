@@ -283,4 +283,6 @@ Form 인증 방식에서 FormAuthenticationSuccessHandler와 FormAuthenticationF
 ```text
 Ajax 방식으로 UserDetailsService에서 사용자를 조회하고 Authentication 객체를 SecurityContext에 저장하는 것은 이해가 된다.
 그 이후 요청에서 JSESSIONID와 같은 쿠키를 보내지 않고도 인가된 사용자라는 것을 어떻게 알수 있는 것일까?
+
+Curl을 이용한 테스트에서는 401, Unauthorized 응답이 내려온다.
 ```
