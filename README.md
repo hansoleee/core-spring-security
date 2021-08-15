@@ -174,6 +174,8 @@ FilterSecurityInterceptor가 AccessDeniedException을 발생시키고 던진다.
 
 ### 인증 프로세스 Ajax 인증 구현
 #### 2021.08.15 1) 흐름 및 개요
+
+#### 2021.08.15 2) 인증 필터 - AjaxAuthenticationFilter
 - AbstractAuthenticationProcessingFilter 구현과 적용 과정
 ```text
 1. AbstractAuthenticationProcessingFilter 상속한 클래스 구현
@@ -181,3 +183,7 @@ FilterSecurityInterceptor가 AccessDeniedException을 발생시키고 던진다.
 3. AjaxAuthenticationToken 생성과 AuthenticationManager를 통한 인증 처리
 4. Filter 등록
 ```
+
+#### 2021.08.15 3) 인증 처리자 - AjaxAuthenticationProvider
+- Ajax 처리를 위한 WebSecurityConfigurerAdapter 상속 클래스 생성
+- AjaxAuthenticationProvider 클래스 생성과 적용
