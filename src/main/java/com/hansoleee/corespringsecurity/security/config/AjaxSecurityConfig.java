@@ -1,6 +1,7 @@
 package com.hansoleee.corespringsecurity.security.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hansoleee.corespringsecurity.security.common.AjaxLoginAuthenticationEntryPoint;
 import com.hansoleee.corespringsecurity.security.filter.AjaxLoginProcessingFilter;
 import com.hansoleee.corespringsecurity.security.handler.AjaxAuthenticationFailureHandler;
 import com.hansoleee.corespringsecurity.security.handler.AjaxAuthenticationSuccessHandler;
@@ -17,6 +18,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -30,13 +32,16 @@ public class AjaxSecurityConfig extends WebSecurityConfigurerAdapter {
     private final AjaxAuthenticationProvider ajaxAuthenticationProvider;
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
     private final AuthenticationFailureHandler authenticationFailureHandler;
+    private final AccessDeniedHandler accessDeniedHandler;
 
     public AjaxSecurityConfig(AjaxAuthenticationProvider ajaxAuthenticationProvider,
-                              @Qualifier("ajaxAuthenticationSuccessHandler") AuthenticationSuccessHandler ajaxAuthenticationSuccessHandler,
-                              @Qualifier("ajaxAuthenticationFailureHandler") AuthenticationFailureHandler ajaxAuthenticationFailureHandler) {
+                              @Qualifier("ajaxAuthenticationSuccessHandler") AuthenticationSuccessHandler authenticationSuccessHandler,
+                              @Qualifier("ajaxAuthenticationFailureHandler") AuthenticationFailureHandler authenticationFailureHandler,
+                              AccessDeniedHandler accessDeniedHandler) {
         this.ajaxAuthenticationProvider = ajaxAuthenticationProvider;
-        this.authenticationSuccessHandler = ajaxAuthenticationSuccessHandler;
-        this.authenticationFailureHandler = ajaxAuthenticationFailureHandler;
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
+        this.authenticationFailureHandler = authenticationFailureHandler;
+        this.accessDeniedHandler = accessDeniedHandler;
     }
 
     @Override
@@ -49,10 +54,15 @@ public class AjaxSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .addFilterBefore(ajaxLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling()
+                .authenticationEntryPoint(new AjaxLoginAuthenticationEntryPoint())
+                .accessDeniedHandler(accessDeniedHandler)
 
+                .and()
                 .antMatcher("/api/**")
                 .authorizeRequests()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+        ;
     }
 
     @Override

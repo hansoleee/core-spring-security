@@ -264,8 +264,23 @@ Form 인증 방식에서 FormAuthenticationSuccessHandler와 FormAuthenticationF
     }
     이 경우는 여러개의 Bean 중에서 특정 Bean이 다른 Bean보다 매우 빈번하게 사용되는 경우에 적합하다. ~~스프링 핵심 원리 - 기본편 중에서~~
 
-
+각 해결방법에 대한 개인적인 생각
 1번 방법의 경우 나중에 코드를 쓰윽 봤을 때 분명 놓칠게 뻔해보인다.
 2번 방법의 경우 "해당 타입의 Bean이 여러 개있고 이번엔 이걸 쓰고있어요"라고 너무 드러내 놓고있다. ~~1번 보단 이 방식이 좋은 것 같다고 생각한다.~~
 3번 방법의 경우는 위에 작성한 내용대로 특정 하나의 Bean이 자주 사용될 때 적용하기에 딱이다.
+```
+
+#### 2021.08.15 5) 인증 및 인가 예외 처리 - AjaxLoginUrlAuthenticationEntryPoint, AjaxAccessDeniedHandler
+- AuthenticationEntryPoint의 역할
+```text
+인증을 받지 못한 사용자 인증이 필요한 자원에 접근할 경우 사용자가 인증을 받을 수 있도록 인도하는 역할 (보통 로그인 페이지로 이동)
+```
+- AccessDeninedHandler의 역할
+```text
+인가받지 못한 사용자가 자원에 접근할 경우에 대한 처리를 담당하는 역할 (보통 접근 권한이 없다는 페이지로 이동)
+```
+##### 추가 학습 필요
+```text
+Ajax 방식으로 UserDetailsService에서 사용자를 조회하고 Authentication 객체를 SecurityContext에 저장하는 것은 이해가 된다.
+그 이후 요청에서 JSESSIONID와 같은 쿠키를 보내지 않고도 인가된 사용자라는 것을 어떻게 알수 있는 것일까?
 ```
