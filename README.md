@@ -269,7 +269,6 @@ Form 인증 방식에서 FormAuthenticationSuccessHandler와 FormAuthenticationF
 2번 방법의 경우 "해당 타입의 Bean이 여러 개있고 이번엔 이걸 쓰고있어요"라고 너무 드러내 놓고있다. ~~1번 보단 이 방식이 좋은 것 같다고 생각한다.~~
 3번 방법의 경우는 위에 작성한 내용대로 특정 하나의 Bean이 자주 사용될 때 적용하기에 딱이다.
 ```
-
 #### 2021.08.15 5) 인증 및 인가 예외 처리 - AjaxLoginUrlAuthenticationEntryPoint, AjaxAccessDeniedHandler
 - AuthenticationEntryPoint의 역할
 ```text
@@ -285,4 +284,16 @@ Ajax 방식으로 UserDetailsService에서 사용자를 조회하고 Authenticat
 그 이후 요청에서 JSESSIONID와 같은 쿠키를 보내지 않고도 인가된 사용자라는 것을 어떻게 알수 있는 것일까?
 
 Curl을 이용한 테스트에서는 401, Unauthorized 응답이 내려온다.
+```
+
+#### 2021.08.15 6) Ajax Custom DSLs 구현하기
+- Custom DSLs 구현 및 적용 방법
+```text
+AbstractHttpConfigurer 상속을 통해 구현할 수 있다.
+
+*DSL이란: Domain Specific Language (도메인 특화 언어)
+```
+-Custom DSLs 사용
+```text
+시스템의 규모가 크고 복잡한 경우에 구조화된 아키텍처 구성에 도움이 될 수 있을 것이다. 
 ```

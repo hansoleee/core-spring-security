@@ -53,7 +53,7 @@ public class AjaxSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .addFilterBefore(ajaxLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(ajaxLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(new AjaxLoginAuthenticationEntryPoint())
                 .accessDeniedHandler(accessDeniedHandler)
@@ -61,7 +61,20 @@ public class AjaxSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .antMatcher("/api/**")
                 .authorizeRequests()
+                .antMatchers("/api/login").permitAll()
                 .anyRequest().authenticated()
+        ;
+
+        customConfigurerAjax(http);
+    }
+
+    private void customConfigurerAjax(HttpSecurity http) throws Exception {
+        http
+                .apply(new AjaxLoginConfigurer<>())
+                .setAuthenticationManager(authenticationManagerBean())
+                .successHandlerAjax(authenticationSuccessHandler)
+                .failureHandlerAjax(authenticationFailureHandler)
+                .createLoginProcessingUrlMatcher("/api/login")
         ;
     }
 
