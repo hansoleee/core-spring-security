@@ -187,3 +187,85 @@ FilterSecurityInterceptor가 AccessDeniedException을 발생시키고 던진다.
 #### 2021.08.15 3) 인증 처리자 - AjaxAuthenticationProvider
 - Ajax 처리를 위한 WebSecurityConfigurerAdapter 상속 클래스 생성
 - AjaxAuthenticationProvider 클래스 생성과 적용
+
+#### 2021.08.15 4) 인증 핸들러 - AjaxAuthenticationSuccessHandler, AjaxAuthenticationFailureHandler
+- Ajax 인증 성공과 실패 이후 작업을 담당하는 SuccessHandler, FailureHandler 클래스 생성
+
+##### 추가 학습 필요
+- 같은 타입의 Bean이 여러개 등록되어 있을 때 Bean 주입 시 발생하는 문제와 해결 방안
+###### 발생 문제
+```text
+AuthenticationSuccessHandler와 AuthenticationFailureHandler가 각각 2개씩 등록된 상황이다.
+
+등록한 Bean
+    AuthenticationSuccessHandler:
+        1. FormAuthenticationSuccessHandler
+        2. AjaxAuthenticationSuccessHandler
+    AuthenticationFailureHandler:
+        1. FormAuthenticationFailureHandler
+        2. AjaxAuthenticationFailureHandler
+        
+이때 WebSecurityConfigurerAdapter를 상속한 클래스에서 
+
+@Slf4j
+@EnableWebSecurity
+@RequiredArgsConstructor
+@Order(1)
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final AuthenticationSuccessHandler authenticationSuccessHandler;
+    private final AuthenticationFailureHandler authenticationFailureHandler;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            .(생략)
+            .successHandler(authenticationSuccessHandler)
+            .failureHandler(authenticationFailureHandler)
+            .(생략)
+    }
+}
+
+위와 같이 사용자 인증이 성공/실패했을 때 처리 로직을 담당하는 Handler를 등록하기 위한 Bean을 주입에서 문제가 발생했다.
+```
+###### 해결방안
+```text
+Form 인증 방식에서 FormAuthenticationSuccessHandler와 FormAuthenticationFailureHandler Bean을 주입하는 방법
+
+1. @Autowired 필드명 매칭
+        private final AuthenticationSuccessHandler authenticationSuccessHandler;
+        -> private final AuthenticationSuccessHandler formAuthenticationSuccessHandler;
+        
+        private final AuthenticationFailureHandler authenticationFailureHandler;
+        -> private final AuthenticationFailureHandler formAuthenticationFailureHandler;
+    위와 같이 필드명을 특정 빈 이름으로 지정한다.
+
+2. @Qualifier -> @Qualifier끼리 매칭 -> 빈 이름 매칭
+
+    @Component
+    @Qualifier("formAuthenticationSuccessHandler") // 추가 작성
+    public class FormAuthenticationSuccessHandler implements SimpleUrlAuthenticationSuccessHandler {
+        ...
+    }
+    
+    public FormSecurityConfig (@Qualifier("formAuthenticationSuccessHandler") AuthenticationSuccessHandler authenticationSuccessHandler) {
+        ....
+    }
+    
+    사용하기 위해서는 생성자를 코드로 작성하고 매개변수에 @Qualifier Annotation과 같이 사용해야한다. ~~Lombok @RequiredArgsContructor를 포기해야한다니..ㅜㅜ~~
+    
+
+3. @Primary 사용
+
+    @Component
+    @Primary
+    public class FormAuthenticationSuccessHandler implements SimpleUrlAuthenticationSuccessHandler {
+        ...
+    }
+    이 경우는 여러개의 Bean 중에서 특정 Bean이 다른 Bean보다 매우 빈번하게 사용되는 경우에 적합하다. ~~스프링 핵심 원리 - 기본편 중에서~~
+
+
+1번 방법의 경우 나중에 코드를 쓰윽 봤을 때 분명 놓칠게 뻔해보인다.
+2번 방법의 경우 "해당 타입의 Bean이 여러 개있고 이번엔 이걸 쓰고있어요"라고 너무 드러내 놓고있다. ~~1번 보단 이 방식이 좋은 것 같다고 생각한다.~~
+3번 방법의 경우는 위에 작성한 내용대로 특정 하나의 Bean이 자주 사용될 때 적용하기에 딱이다.
+```

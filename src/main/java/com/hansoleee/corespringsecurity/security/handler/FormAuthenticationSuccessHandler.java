@@ -2,6 +2,7 @@ package com.hansoleee.corespringsecurity.security.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
@@ -20,6 +21,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Slf4j
 @Component
+@Qualifier("formAuthenticationSuccessHandler")
 @RequiredArgsConstructor
 public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 

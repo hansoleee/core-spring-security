@@ -1,9 +1,12 @@
 package com.hansoleee.corespringsecurity.security.config;
 
 import com.hansoleee.corespringsecurity.security.handler.FormAccessDeniedHandler;
+import com.hansoleee.corespringsecurity.security.handler.FormAuthenticationFailureHandler;
+import com.hansoleee.corespringsecurity.security.handler.FormAuthenticationSuccessHandler;
 import com.hansoleee.corespringsecurity.security.provider.FormAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
@@ -23,7 +26,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 @Slf4j
 @EnableWebSecurity
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @Order(1)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -31,6 +34,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthenticationDetailsSource authenticationDetailsSource;
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
     private final AuthenticationFailureHandler authenticationFailureHandler;
+
+    public SecurityConfig(UserDetailsService userDetailsService,
+                          AuthenticationDetailsSource authenticationDetailsSource,
+                          @Qualifier("formAuthenticationSuccessHandler") AuthenticationSuccessHandler formAuthenticationSuccessHandler,
+                          @Qualifier("formAuthenticationFailureHandler") AuthenticationFailureHandler formAuthenticationFailureHandler) {
+        this.userDetailsService = userDetailsService;
+        this.authenticationDetailsSource = authenticationDetailsSource;
+        this.authenticationSuccessHandler = formAuthenticationSuccessHandler;
+        this.authenticationFailureHandler = formAuthenticationFailureHandler;
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
