@@ -171,3 +171,13 @@ FormLogin 인증 필터가 로그인에 실패한 후에 필요한 로직을 수
 FilterSecurityInterceptor가 AccessDeniedException을 발생시키고 던진다.
 그러면 ExceptionTranslationFilter가 AccessDeniedException을 받고 accessDeniedHandler에게 처리를 위임한다.
 ```
+
+### 인증 프로세스 Ajax 인증 구현
+#### 2021.08.15 1) 흐름 및 개요
+- AbstractAuthenticationProcessingFilter 구현과 적용 과정
+```text
+1. AbstractAuthenticationProcessingFilter 상속한 클래스 구현
+2. 필터 동작 조건 설정
+3. AjaxAuthenticationToken 생성과 AuthenticationManager를 통한 인증 처리
+4. Filter 등록
+```
