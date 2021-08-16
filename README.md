@@ -377,3 +377,18 @@ FilterInvocationSecurityMetadataSource.class - 요청 정보와 매칭되는 권
 권한 목록 존재 - NO -> 인가 처리를 하지 않음
              - YES -> AccessDecisionManager.class로 처리 위임 
 ```
+
+#### 2021.08.16 5) 웹 기반 인가 처리 DB 연동 - FilterInvocationSecurityMetadataSource
+- UrlResourcesMapFactoryBean 생성
+```text
+UrlResourcesMapFactoryBean의 역할
+    DB 조회를 통해 얻은 자원/권한 정보를 빈으로 생성해서 UrlFilterInvocationSecurityMetadataSource에 전달하는 역할을 한다.
+```
+
+##### 추가 학습 필요
+- FactoryBean
+```text
+강의 진행대로 코드를 작성하다보니 DB에서 조회한 자원/권한 정보를 갖는 Map 객체를 FactoryBean 인터페이스를 구현한 Bean을 통해서 가져오고 있다.
+음.. FactoryBean 인터페이스가 생소하기도 하고 @Component Annotation을 이용한 Bean 등록을 통해 자원/권한 정보 Map 객체를 return하는 메소드 만들면 되지 않을까 라는 생각을 했다.
+(나의 경우 DB의 값 그대로 가져온다면 @Repository 객체에서 바로 꺼내오거나 로직이 필요한 경우 @Service 객체에서 꺼내온다)
+```

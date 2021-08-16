@@ -2,16 +2,11 @@ package com.hansoleee.corespringsecurity.security.config;
 
 import com.hansoleee.corespringsecurity.security.common.FormWebAuthenticationDetailsSource;
 import com.hansoleee.corespringsecurity.security.handler.FormAccessDeniedHandler;
-import com.hansoleee.corespringsecurity.security.metadatasource.UrlFilterInvocationSecurityMetadataSource;
 import com.hansoleee.corespringsecurity.security.provider.AjaxAuthenticationProvider;
 import com.hansoleee.corespringsecurity.security.provider.FormAuthenticationProvider;
-import com.hansoleee.corespringsecurity.security.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
@@ -79,10 +74,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/mypage").hasRole("USER")
-                .antMatchers("/messages").hasRole("MANAGER")
-                .antMatchers("/config").hasRole("ADMIN")
-                .antMatchers("/**").permitAll()
+//                .antMatchers("/mypage").hasRole("USER")
+//                .antMatchers("/messages").hasRole("MANAGER")
+//                .antMatchers("/config").hasRole("ADMIN")
+//                .antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
@@ -146,9 +141,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private List<AccessDecisionVoter<?>> getAccessDecisionVoters() {
         return List.of(new RoleVoter());
     }
-
-//    @Bean
-//    public FilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource() {
-//        return new UrlFilterInvocationSecurityMetadataSource();
-//    }
 }
