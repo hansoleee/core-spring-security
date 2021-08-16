@@ -329,3 +329,28 @@ xhr.setRequestHeader(csrfHeader, csrfToken);
     1. URL
     2. Method
 ```
+#### 2021.08.16 2) 관리자 시스템 - 권한 도메인, 서비스, 리포지토리 구성
+
+#### 2021.08.16 3) 웹 기반 인가처리 DB 연동 - 주요 아키텍처 이해
+- 스프링 시큐리티의 인가를 위한 필요 정보
+```text
+http.antMatchers("/user").access("hasRole('UESR')")
+
+**사용자**가 **/user 자원**에 접근하기 위해서는 **ROLE_USER 권한**이 필요하다
+
+인증 대상 : 사용자
+요청 자원 : /user
+권한 정보 : ROLE_USER
+
+인가 처리를 담당하는 Filter(SecurityInterceptor)가 인가 처리를 위임하는 AccessDecisionManager한테 위 3가지 정보를 전달한다.
+AccessDecisionManager는 전달받은 3가지 정보를 통해 인증 대상이 갖고 있는 권한으로 요청하는 자원에 접근이 가능한지 판단하게 된다.
+```
+- 스프링 시큐리티가 초기화되는 과정&사용자의 자원 요청에 대한 인가 처리 과정
+```text
+ExpressionBasedFilterInvocationSecurityMetadataSource.class 가 Key-Value(자원-권한) Map을 갖고 있다.
+부모 클래스인 DefaultFilterInvocationSecurityMetadataSource에서 사용자의 요청과 요청에 해당하는 접근 권한을 찾는다.
+그리고 인증 정보, 요청 정보, 권한 정보를 AccessDecisionManger 객체에 넘겨 처리를 맡긴다.
+
+너무 많은 과정이 있는데 정리하기가 힘들다... 이유는 아마 해당 기능을 비슷하게라도 구현해본 경험이 없어서 흐름 파악에 중점을 두었기 때문인것으로 생각된다. 꼭 다시 정리하도록 하자
+~~그냥 Security가 어렵다 포기하지 말고 계속 파보자~~
+```
