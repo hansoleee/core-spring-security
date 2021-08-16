@@ -392,3 +392,6 @@ UrlResourcesMapFactoryBean의 역할
 음.. FactoryBean 인터페이스가 생소하기도 하고 @Component Annotation을 이용한 Bean 등록을 통해 자원/권한 정보 Map 객체를 return하는 메소드 만들면 되지 않을까 라는 생각을 했다.
 (나의 경우 DB의 값 그대로 가져온다면 @Repository 객체에서 바로 꺼내오거나 로직이 필요한 경우 @Service 객체에서 꺼내온다)
 ```
+
+#### 2021.08.16 6) 웹 기반 인가 처리 실시간 반영하기
+- 업데이트된 권한/자원 정보 Map객체를 FilterInvocationSecurityMetadataSource를 구현한 객체에 넘겨주면 됨 

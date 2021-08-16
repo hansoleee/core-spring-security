@@ -4,6 +4,7 @@ import com.hansoleee.corespringsecurity.domain.dto.ResourcesDto;
 import com.hansoleee.corespringsecurity.domain.entity.Resources;
 import com.hansoleee.corespringsecurity.domain.entity.Role;
 import com.hansoleee.corespringsecurity.repository.RoleRepository;
+import com.hansoleee.corespringsecurity.security.factory.UrlResourcesMapFactoryBean;
 import com.hansoleee.corespringsecurity.service.ResourcesService;
 import com.hansoleee.corespringsecurity.service.RoleService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,8 @@ public class ResourcesController {
     private final ResourcesService resourcesService;
     private final RoleRepository roleRepository;
     private final RoleService roleService;
+    private final UrlResourcesMapFactoryBean urlResourcesMapFactoryBean;
+
 
     @GetMapping("/admin/resources")
     public String getResources(Model model) throws Exception {
@@ -47,6 +50,7 @@ public class ResourcesController {
         resources.setRoleSet(roles);
 
         resourcesService.createResources(resources);
+        urlResourcesMapFactoryBean.reload();
 
         return "redirect:/admin/resources";
     }
@@ -69,7 +73,7 @@ public class ResourcesController {
     public String getResources(@PathVariable String id, Model model) throws Exception {
         List<Role> roleList = roleService.getRoles();
         model.addAttribute("roleList", roleList);
-        Resources resources = resourcesService.getResources(Long.valueOf(id));
+        Resources resources = resourcesService.getResources(Long.parseLong(id));
 
         ModelMapper modelMapper = new ModelMapper();
         ResourcesDto resourcesDto = modelMapper.map(resources, ResourcesDto.class);
@@ -80,8 +84,9 @@ public class ResourcesController {
 
     @GetMapping("/admin/resources/delete/{id}")
     public String removeResources(@PathVariable String id, Model model) throws Exception {
-        Resources resources = resourcesService.getResources(Long.valueOf(id));
-        resourcesService.deleteResources(Long.valueOf(id));
+        Resources resources = resourcesService.getResources(Long.parseLong(id));
+        resourcesService.deleteResources(Long.parseLong(id));
+        urlResourcesMapFactoryBean.reload();
 
         return "redirect:/admin/resources";
     }

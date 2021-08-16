@@ -23,13 +23,13 @@ public class UrlResourcesMapFactoryBean implements FactoryBean<Map<RequestMatche
     @Override
     public Map<RequestMatcher, List<ConfigAttribute>> getObject() {
         if (resourceMap.isEmpty()) {
-            init();
+            reload();
         }
 
         return resourceMap;
     }
 
-    private void init() {
+    public void reload() {
         resourceMap = securityResourceService.getResourceList();
     }
 
