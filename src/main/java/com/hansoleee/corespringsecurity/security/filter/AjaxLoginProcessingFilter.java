@@ -1,15 +1,16 @@
 package com.hansoleee.corespringsecurity.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hansoleee.corespringsecurity.domain.AccountDTO;
+import com.hansoleee.corespringsecurity.domain.dto.AccountDto;
 import com.hansoleee.corespringsecurity.security.token.AjaxAuthenticationToken;
-import org.modelmapper.internal.util.Assert;
+import com.hansoleee.corespringsecurity.util.WebUtil;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -18,28 +19,29 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 
 public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private static final String XML_HTTP_REQUEST = "XMLHttpRequest";
+    private static final String X_REQUESTED_WITH = "X-Requested-With";
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public AjaxLoginProcessingFilter() {
-        super(new AntPathRequestMatcher("/api/login"));
+        super(new AntPathRequestMatcher("/ajaxLogin", "POST"));
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException, IOException, ServletException {
-        Assert.isTrue(isAjax(request), "Authentication is not supported");
-
-        AccountDTO accountDTO = objectMapper.readValue(request.getReader(), AccountDTO.class);
-        if (isEmpty(accountDTO.getUsername()) || isEmpty(accountDTO.getPassword())) {
-            throw new IllegalArgumentException("Username or Password is Empty");
+            throws AuthenticationException, IOException {
+        if (!HttpMethod.POST.name().equals(request.getMethod()) || !WebUtil.isAjax(request)) {
+            throw new IllegalArgumentException("Authentication method not supported");
         }
 
-        AjaxAuthenticationToken ajaxAuthenticationToken = new AjaxAuthenticationToken(accountDTO.getUsername(), accountDTO.getPassword());
+        AccountDto accountDto = objectMapper.readValue(request.getReader(), AccountDto.class);
 
-        return getAuthenticationManager().authenticate(ajaxAuthenticationToken);
-    }
+        if (isEmpty(accountDto.getUsername()) || isEmpty(accountDto.getPassword())) {
+            throw new AuthenticationServiceException("Username or Password not provided");
+        }
+        AjaxAuthenticationToken token = new AjaxAuthenticationToken(accountDto.getUsername(), accountDto.getPassword());
 
-    private boolean isAjax(HttpServletRequest request) {
-        return request.getHeader("X-Requested-With").equals("XMLHttpRequest");
+        return this.getAuthenticationManager().authenticate(token);
     }
 }

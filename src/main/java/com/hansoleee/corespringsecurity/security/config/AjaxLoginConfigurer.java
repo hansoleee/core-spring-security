@@ -57,16 +57,6 @@ public final class AjaxLoginConfigurer<H extends HttpSecurityBuilder<H>> extends
         return super.loginPage(loginPage);
     }
 
-    @Override
-    public AjaxLoginConfigurer<H> loginProcessingUrl(String loginProcessingUrl) {
-        return super.loginProcessingUrl(loginProcessingUrl);
-    }
-
-    @Override
-    protected RequestMatcher createLoginProcessingUrlMatcher(String loginProcessingUrl) {
-        return new AntPathRequestMatcher(loginProcessingUrl, "POST");
-    }
-
     public AjaxLoginConfigurer<H> successHandlerAjax(AuthenticationSuccessHandler successHandler) {
         this.successHandler = successHandler;
         return this;
@@ -80,5 +70,10 @@ public final class AjaxLoginConfigurer<H extends HttpSecurityBuilder<H>> extends
     public AjaxLoginConfigurer<H> setAuthenticationManager(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
         return this;
+    }
+
+    @Override
+    protected RequestMatcher createLoginProcessingUrlMatcher(String loginProcessingUrl) {
+        return new AntPathRequestMatcher(loginProcessingUrl, "POST");
     }
 }
