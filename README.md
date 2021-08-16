@@ -354,3 +354,26 @@ ExpressionBasedFilterInvocationSecurityMetadataSource.class 가 Key-Value(자원
 너무 많은 과정이 있는데 정리하기가 힘들다... 이유는 아마 해당 기능을 비슷하게라도 구현해본 경험이 없어서 흐름 파악에 중점을 두었기 때문인것으로 생각된다. 꼭 다시 정리하도록 하자
 ~~그냥 Security가 어렵다 포기하지 말고 계속 파보자~~
 ```
+
+#### 2021.08.16 4) 웹 기반 인가처리 DB 연동 - FilterInvocationSecurityMetadataSource(1)
+- DB 연동 인가 처리를 위한 Interface 구현
+```text
+Interface 구현 내용
+1. 사용자가 접근하고자 하는 URL 자원에 대한 권한 정보 추출 -> DB select
+2. AccessDecisionManger에게 전달하여 인가처리 수행
+3. 사용자의 요청마다 요청 정보에 매핑된 권한 정보 확인
+```
+- 구현한 Interface를 사용한 인가 처리의 전체 흐름
+```text
+user - GET /admin -> 
+FilterSecurityInterceptor.class - 권한 정보 조회 -> 
+FilterInvocationSecurityMetadataSource.class - 요청 정보와 매칭되는 권한 정보 추출 ->
+        {"/admin": [
+                "ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"
+            ],
+            "/user": [
+                "ROLE_USER"
+            ]}
+권한 목록 존재 - NO -> 인가 처리를 하지 않음
+             - YES -> AccessDecisionManager.class로 처리 위임 
+```

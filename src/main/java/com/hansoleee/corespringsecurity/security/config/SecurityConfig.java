@@ -47,6 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthenticationFailureHandler ajaxAuthenticationFailureHandler;
     private final AuthenticationSuccessHandler formAuthenticationSuccessHandler;
     private final AuthenticationFailureHandler formAuthenticationFailureHandler;
+    private final FilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource;
 
     @Override
     public void configure(WebSecurity web) {
@@ -83,6 +84,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/config").hasRole("ADMIN")
                 .antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
+
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -91,14 +93,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(formAuthenticationSuccessHandler)
                 .failureHandler(formAuthenticationFailureHandler)
                 .permitAll()
+
                 .and()
                 .exceptionHandling()
 //                .authenticationEntryPoint(new AjaxLoginAuthenticationEntryPoint())
                 .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
                 .accessDeniedPage("/denied")
                 .accessDeniedHandler(accessDeniedHandler())
-//        .and()
-//                .addFilterBefore(customFilterSecurityInterceptor(), FilterSecurityInterceptor.class)
+
+                .and()
+                .addFilterBefore(customFilterSecurityInterceptor(), FilterSecurityInterceptor.class)
         ;
 
         http.csrf().disable();
@@ -129,7 +133,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public FilterSecurityInterceptor customFilterSecurityInterceptor() throws Exception {
         FilterSecurityInterceptor filterSecurityInterceptor = new FilterSecurityInterceptor();
-        filterSecurityInterceptor.setSecurityMetadataSource(urlFilterInvocationSecurityMetadataSource());
+        filterSecurityInterceptor.setSecurityMetadataSource(urlFilterInvocationSecurityMetadataSource);
         filterSecurityInterceptor.setAccessDecisionManager(affirmativeBased());
         filterSecurityInterceptor.setAuthenticationManager(authenticationManagerBean());
         return filterSecurityInterceptor;
@@ -143,8 +147,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return List.of(new RoleVoter());
     }
 
-    @Bean
-    public FilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource() {
-        return new UrlFilterInvocationSecurityMetadataSource();
-    }
+//    @Bean
+//    public FilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource() {
+//        return new UrlFilterInvocationSecurityMetadataSource();
+//    }
 }
