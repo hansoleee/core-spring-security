@@ -394,4 +394,23 @@ UrlResourcesMapFactoryBean의 역할
 ```
 
 #### 2021.08.16 6) 웹 기반 인가 처리 실시간 반영하기
-- 업데이트된 권한/자원 정보 Map객체를 FilterInvocationSecurityMetadataSource를 구현한 객체에 넘겨주면 됨 
+- 업데이트된 권한/자원 정보 Map객체를 FilterInvocationSecurityMetadataSource를 구현한 객체에 넘겨주면 됨
+
+#### 2021.08.16 7) 인가 처리 허용 필터 - PermitAllFilter 구현
+- Spring Security 인가 처리 과정과 permitAllFilter 적용한 처리 과정
+
+##### 추가 학습 필요
+- web ignore 설정의 의미와 역할 
+```text
+아래의 코드에 작성된 web ignore 설정을 하게되면 AbstractSecurityInterceptor에는 설정된 URL은 거치지 않을 것으로 생각했지만 
+일단 모든 URL은 DEBUG에서 확인할 수 있었다.
+```
+```java
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
+}
+```

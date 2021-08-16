@@ -1,6 +1,7 @@
 package com.hansoleee.corespringsecurity.security.config;
 
 import com.hansoleee.corespringsecurity.security.common.FormWebAuthenticationDetailsSource;
+import com.hansoleee.corespringsecurity.security.filter.PermitAllFilter;
 import com.hansoleee.corespringsecurity.security.handler.FormAccessDeniedHandler;
 import com.hansoleee.corespringsecurity.security.provider.AjaxAuthenticationProvider;
 import com.hansoleee.corespringsecurity.security.provider.FormAuthenticationProvider;
@@ -97,7 +98,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(accessDeniedHandler())
 
                 .and()
-                .addFilterBefore(customFilterSecurityInterceptor(), FilterSecurityInterceptor.class)
+                .addFilterAt(customFilterSecurityInterceptor(), FilterSecurityInterceptor.class)
         ;
 
         http.csrf().disable();
@@ -126,12 +127,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public FilterSecurityInterceptor customFilterSecurityInterceptor() throws Exception {
-        FilterSecurityInterceptor filterSecurityInterceptor = new FilterSecurityInterceptor();
-        filterSecurityInterceptor.setSecurityMetadataSource(urlFilterInvocationSecurityMetadataSource);
-        filterSecurityInterceptor.setAccessDecisionManager(affirmativeBased());
-        filterSecurityInterceptor.setAuthenticationManager(authenticationManagerBean());
-        return filterSecurityInterceptor;
+    public PermitAllFilter customFilterSecurityInterceptor() throws Exception {
+        PermitAllFilter permitAllFilter = new PermitAllFilter();
+        permitAllFilter.setSecurityMetadataSource(urlFilterInvocationSecurityMetadataSource);
+        permitAllFilter.setAccessDecisionManager(affirmativeBased());
+        permitAllFilter.setAuthenticationManager(authenticationManagerBean());
+        return permitAllFilter;
     }
 
     private AccessDecisionManager affirmativeBased() {
